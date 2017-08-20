@@ -1,0 +1,19 @@
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+.container{
+  padding-top: 10px;
+}
+.titlefont{
+  font-family: 'UnifrakturCook', cursive;
+  font-size: 72px;
+  alignment: center;
+}
+.header{
+  text-align: center;
+}
+#main:-webkit-full-screen {
+  width: 100%;
+  height: 100%;
+}
+#main{
+  overflow: auto;
+}
