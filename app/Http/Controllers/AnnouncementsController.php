@@ -29,12 +29,12 @@ class AnnouncementsController extends Controller
         $grad_year = Schoology::apiResult('users/'.Auth::user()->id)->grad_year;
         if($grad_year){
             $grade = Grade::where('grad_year',$grad_year)->first();
-            $announcements = $grade->announcements()->where('published_until','>=', Carbon::now())->get();
+            $announcements = $grade->announcements()->where('published_from', '<=', Carbon::now())->where('published_until','>=', Carbon::now())->get();
         } elseif($id){
             $grade = Grade::findOrFail($id);
-            $announcements = $grade->announcements()->where('published_until','>=', Carbon::now())->get();
+            $announcements = $grade->announcements()->where('published_from', '<=', Carbon::now())->where('published_until','>=', Carbon::now())->get();
         } else {
-            $announcements = Announcement::where('published_until', '>=', Carbon::now())->get();
+            $announcements = Announcement::where('published_from', '<=', Carbon::now())->where('published_until', '>=', Carbon::now())->get();
         }
         $date = Carbon::now()->format('l, F j, Y');
 
@@ -50,11 +50,12 @@ class AnnouncementsController extends Controller
     {
         $grades = Grade::all();
         $dates = array();
-        for ($i=1; $i<=4; $i++){
+        $days = [1,2,3,4,5,6,7];
+        for ($i=0; $i<=180; $i++){
             $dates[$i] = Carbon::now()->addDay($i)->format('l jS \\of F');
         }
         $announcement = new Announcement();
-        return view('announcements.create')->with('grades', $grades)->with('dates', $dates)->with('announcement',$announcement);
+        return view('announcements.create')->with('grades', $grades)->with('dates', $dates)->with('announcement',$announcement)->with('days', $days);
     }
 
     /**
@@ -68,11 +69,14 @@ class AnnouncementsController extends Controller
             'body'  => 'required',
             'grades' => 'required'
         ]);
+        $published_from = Carbon::now('Europe/Berlin')->addDays($request->postFrom);
+        $published_until = Carbon::now('Europe/Berlin')->addDays($request->postFrom + $request->postFor);
         $announcement = Announcement::create([
             'title' => $request->title,
             'body'  => $request->body,
             'user_id' => session('schoology')['uid'],
-            'published_until' => Carbon::now('Europe/Berlin')->addDays($request->postFor)
+            'published_from' => $published_from,
+            'published_until' => $published_until
         ]);
         $announcement->grades()->attach($request->grades);
         return redirect(url('application'));

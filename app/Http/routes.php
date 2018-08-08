@@ -10,9 +10,11 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-Route::get('application', 'AnnouncementsController@index');
+Route::group(['middleware' => ['web']], function() {
+    Route::get('application', 'AnnouncementsController@index');
+});
 
-Route::group(['prefix'=>'api'], function(){
+Route::group(['prefix'=>'api', 'middleware' => ['web']], function(){
     Route::get('announcements', 'AnnouncementsController@index');
     Route::get('announcements/grade/{id}', 'AnnouncementsController@index');
     Route::post('announcements', 'AnnouncementsController@store');

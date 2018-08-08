@@ -10,6 +10,7 @@ class Announcement extends Model
         'title',
         'body',
         'user_id',
+        'published_from',
         'published_until'
     ];
     public function user(){

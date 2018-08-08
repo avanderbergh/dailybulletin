@@ -16,8 +16,10 @@
     @endforeach
 </div>
 <div class="form-group">
-    {!! Form::label('postFor', 'Display this announcement until:')!!}
-    {!! Form::select('postFor', $dates, null, ['class'=>'form-control']) !!}
+    {!! Form::label('postFrom', 'Display this announcement from:')!!}
+    {!! Form::select('postFrom', $dates, null, ['class'=>'form-control']) !!}
+    {!! Form::label('postFor', 'For how many days:')!!}
+    {!! Form::select('postFor', $days, null, ['class'=>'form-control']) !!}
 </div>
 <!--- Add Announcement Field --->
 <div class="form-group">
